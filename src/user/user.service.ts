@@ -5,11 +5,12 @@ import { User } from '../../generated/prisma';
 export class UserService {
   private readonly users = [
     { id: 1, email: 'john@johndoe.com', password: 'changeme' },
-    { id: 2, email: 'sara@sara', password: 'guess' },
+    { id: 2, email: 'sara@sara.com', password: 'guess' },
   ];
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async findOne(email: string): Promise<User | undefined> {
+    console.log(email);
     return this.users.find((user) => user.email === email);
   }
 }

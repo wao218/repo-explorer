@@ -10,7 +10,6 @@ export class UserService {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async findOne(email: string): Promise<User | undefined> {
-    console.log(email);
     return this.users.find((user) => user.email === email);
   }
 }

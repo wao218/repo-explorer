@@ -1,15 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../generated/prisma';
+import { CreateUserDto } from './dto/createUser.dto';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  private readonly users = [
-    { id: 1, email: 'john@johndoe.com', password: 'changeme' },
-    { id: 2, email: 'sara@sara.com', password: 'guess' },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async findOne(email: string): Promise<User | undefined> {
-    return this.users.find((user) => user.email === email);
+  async findUserByEmail(email: string): Promise<User | null> {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async createUser(dto: CreateUserDto) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(dto.password, saltRounds);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        password: hashedPassword,
+      },
+    });
+
+    const { password, ...newUser } = user;
+    return newUser;
   }
 }

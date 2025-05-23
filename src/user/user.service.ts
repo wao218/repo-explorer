@@ -3,6 +3,7 @@ import { User } from '../../generated/prisma';
 import { CreateUserDto } from './dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateFavoriteDto } from './dto/createFavorite.dto';
 
 @Injectable()
 export class UserService {
@@ -29,5 +30,20 @@ export class UserService {
 
     const { password, ...newUser } = user;
     return newUser;
+  }
+
+  async addFavorite(dto: CreateFavoriteDto, user: User) {
+    const favorite = await this.prisma.favorite.create({
+      data: {
+        userId: user.id,
+        name: dto.name,
+        description: dto.description,
+        starCount: Number(dto.starCount),
+        url: dto.url,
+        language: dto.language,
+      },
+    });
+
+    return favorite;
   }
 }

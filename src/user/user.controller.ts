@@ -1,6 +1,9 @@
-import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UserService } from './user.service';
+import { CreateFavoriteDto } from './dto/createFavorite.dto';
+import { User } from '../auth/decorator/user.decorator';
+import { User as UserType } from '../../generated/prisma';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -13,7 +16,12 @@ export class UserController {
 
   // save a new repo
   @Post('favorites')
-  async addToFavoriteRepos() {}
+  async addToFavoriteRepos(
+    @Body() createFavoriteDto: CreateFavoriteDto,
+    @User() user: UserType,
+  ) {
+    return await this.userService.addFavorite(createFavoriteDto, user);
+  }
 
   // remove a saved repo
   @Delete('favorites/:id')

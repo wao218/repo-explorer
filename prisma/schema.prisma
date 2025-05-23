@@ -19,6 +19,8 @@ model User {
   email    String @unique
   password String
 
+  favorites Favorite[]
+
   @@map("users")
 }
 
@@ -29,6 +31,9 @@ model Favorite {
   starCount   Int
   url         String
   language    String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
   @@map("favorites")
 }

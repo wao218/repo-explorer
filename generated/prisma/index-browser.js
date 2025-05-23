@@ -132,7 +132,8 @@ exports.Prisma.FavoriteScalarFieldEnum = {
   description: 'description',
   starCount: 'starCount',
   url: 'url',
-  language: 'language'
+  language: 'language',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { User } from '../../generated/prisma';
 import { CreateUserDto } from './dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
@@ -55,5 +55,25 @@ export class UserService {
     });
 
     return favorites;
+  }
+
+  async deleteFavoriteById(favoriteId: number, userId: number) {
+    const favorite = await this.prisma.favorite.findUnique({
+      where: {
+        id: favoriteId,
+      },
+    });
+
+    if (!favorite || userId !== favorite.userId) {
+      throw new ForbiddenException('Access to resource forbidden');
+    }
+
+    await this.prisma.favorite.delete({
+      where: {
+        id: favoriteId,
+      },
+    });
+
+    return favorite;
   }
 }

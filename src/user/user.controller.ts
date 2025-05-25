@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UserService } from './user.service';
 import { CreateFavoriteDto } from './dto/createFavorite.dto';
@@ -27,5 +36,10 @@ export class UserController {
 
   // remove a saved repo
   @Delete('favorites/:id')
-  async deleteFavoriteRepoById() {}
+  async deleteFavoriteRepoById(
+    @Param('id', ParseIntPipe) favoriteId: number,
+    @User('id') userId: number,
+  ) {
+    return await this.userService.deleteFavoriteById(favoriteId, userId);
+  }
 }

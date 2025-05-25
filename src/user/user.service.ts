@@ -46,4 +46,14 @@ export class UserService {
 
     return favorite;
   }
+
+  async getFavorites(userId: number) {
+    const favorites = await this.prisma.favorite.findMany({
+      where: {
+        userId,
+      },
+    });
+
+    return favorites;
+  }
 }

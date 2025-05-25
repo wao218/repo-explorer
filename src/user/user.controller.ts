@@ -12,7 +12,9 @@ export class UserController {
 
   // Get user's saved Repos
   @Get('favorites')
-  async getFavoriteRepos() {}
+  async getFavoriteRepos(@User('id') userId: number) {
+    return await this.userService.getFavorites(userId);
+  }
 
   // save a new repo
   @Post('favorites')
